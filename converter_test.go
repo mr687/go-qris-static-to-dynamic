@@ -84,7 +84,7 @@ func TestE2E_QRISExample(t *testing.T) {
 	}
 
 	// Validate CRC for produced output
-	if err := validateChecksum(out); err != nil {
+	if err := ValidateCRC(out); err != nil {
 		t.Fatalf("output CRC invalid: %v", err)
 	}
 }
@@ -122,7 +122,7 @@ func TestToDynamic_WithFixedTip(t *testing.T) {
 		t.Fatalf("tag54 amount mismatch: expected %d got %s", 25000, tag54.Value)
 	}
 
-	if err := validateChecksum(out); err != nil {
+	if err := ValidateCRC(out); err != nil {
 		t.Fatalf("output CRC invalid: %v", err)
 	}
 }

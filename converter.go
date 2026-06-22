@@ -35,7 +35,7 @@ func ToDynamic(qrisStatic string, option DynamicOption) (string, error) {
 	}
 
 	// validate static QRIS
-	if err := validateChecksum(qrisStatic); err != nil {
+	if err := ValidateCRC(qrisStatic); err != nil {
 		return "", err
 	}
 
@@ -137,7 +137,20 @@ func createTLV(tag string, value string) TLV {
 	}
 }
 
-func validateChecksum(qris string) error {
+func ValidateStatic(qris string) error {
+	if err := ValidateCRC(qris); err != nil {
+		return err
+	}
+
+	tlvs := parseTLV(qris)
+	tag01, exists := findTag(tlvs, "01")
+	if !exists || tag01.Value != "11" {
+		return ErrQRISNotStatic
+	}
+	return nil
+}
+
+func ValidateCRC(qris string) error {
 	if len(qris) < 4 {
 		return ErrQRISInvalidChecksum
 	}
